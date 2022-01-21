@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ethpay</title>
+</head>
+<body>
+    <div class="container-wrap">
+        <div class="center-box box-one">
+            <p>请选择支付方式</p>
+            <div class="choose-pay-item">
+                <div class="choose-pay-left">
+                    <img src="./eth.png" alt="">
+                    <span>ETH</span>
+                </div>
+                <div class="choose-pay-right">
+                    <div class="name">金额</div>
+                    <div class="money" id="ETHMoney">1.000436</div>
+                </div>
+            </div>
+            <div class="choose-pay-item">
+                <div class="choose-pay-left">
+                    <img src="./usdt.png" alt="">
+                    <span>USDT (ERC20)</span>
+                </div>
+                <div class="choose-pay-right">
+                    <div class="name">金额</div>
+                    <div class="money" id="USDTMoney">2.000436</div>
+                </div>
+            </div>
+			<div class="choose-pay-item">
+			    <div class="choose-pay-left">
+			        <img src="./usdt.png" alt="">
+			        <span>USDT (TRC20)</span>
+			    </div>
+			    <div class="choose-pay-right">
+			        <div class="name">金额</div>
+			        <div class="money" id="TRCMoney">8.90052</div>
+			    </div>
+			</div>
+            <div class="choose-pay-item">
+                <div class="choose-pay-left">
+                    <img src="./bnb.png" alt="">
+                    <span>BNB (BEP20)</span>
+                </div>
+                <div class="choose-pay-right">
+                    <div class="name">金额</div>
+                    <div class="money" id="BNBMoney">3.000436</div>
+                </div>
+            </div>
+            <div class="choose-pay-item">
+                <div class="choose-pay-left">
+                    <img src="./etc.png" alt="">
+                    <span>BUSD (BEP20)</span>
+                </div>
+                <div class="choose-pay-right">
+                    <div class="name">金额</div>
+                    <div class="money" id="BUSDMoney">4.000436</div>
+                </div>
+            </div>
+            <div class="choose-pay-item" id="isUsd">
+                <div class="choose-pay-left">
+                    <img src="./usd.png" alt="">
+                    <span>USD</span>
+                </div>
+                <div class="choose-pay-right">
+                    <div class="name">金额</div>
+                    <div class="money" id="USDMoney">5.000436</div>
+                </div>
+            </div>
+        </div>
+        <div class="center-box box-two">
+            <div class="box-top">
+                <div class="two-box-title">
+                    <img src="./etc.png" alt="" id="isImg">
+                    <span id="isTitle">ETC</span>
+                </div>
+                <div class="two-box-pay">
+                    <div class="pay-name">
+                        应付款
+                    </div>
+                    <div class="pay-money" id="isPayMoney">
+                        9.00046
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-wrap">
+                <div class="box-address">
+                    <div class="add-title">收款地址</div>
+                    <div class="add-msg">
+                        <span id="text" class="add-p">0x5d3b94c5d5222495348fd101c75dd1240dbe0a77</span>
+                        <textarea id="input">这是</textarea>
+                        <span class="copy" data-clipboard-target="#target1"  id="copy_btn1">复制</span>                    
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-wrap">
+                <div class="box-address">
+                    <div class="add-title">地址二维码</div>
+                    <div class="isewm">
+                        <img src="" alt="" id="qr">
+                    </div>
+                </div>
+            </div>  
+            <div class="pay-notic">
+                *请及时向以上地址付款
+            </div> 
+            <div class="btn-wrap">
+                <div class="bottom-btn" id="resetBtn" style="cursor:pointer;">
+                    重新选择付款方式
+                </div> 
+            </div>                    
+        </div>
+    </div>
+</body>
+<script type="text/javascript">    
+	document.querySelector('#qr').src = `https://ethpay.suanmiao.io:11218/qr?text=${new URLSearchParams(location.search).get("To")}`;
+    window.onload=function(){
+        function getQueryString(name) {  
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  
+            var r = window.location.search.substr(1).match(reg);  
+            if (r != null) return decodeURI(r[2]);
+            return null;  
+        }
+		let trc = getQueryString('TRC20USDT')
+        let to = getQueryString('to')
+        let ETH = getQueryString('ETH')
+        let USDT = getQueryString('USDT')
+        let BNB = getQueryString('BNB')
+        let BUSD = getQueryString('BUSD')
+        let USD = getQueryString('USD')
+        let To = getQueryString('To')
+        let USDPayURL = getQueryString('USDPayURL')
+		
+		document.getElementById("TRCMoney").innerHTML=trc
+        document.getElementById("ETHMoney").innerHTML=ETH
+        document.getElementById("USDTMoney").innerHTML=USDT
+        document.getElementById("BNBMoney").innerHTML=BNB
+        document.getElementById("BUSDMoney").innerHTML=BUSD
+        document.getElementById("USDMoney").innerHTML=USD/100
+        document.getElementById("text").innerHTML=To
+        
+        var ishttps = 'https' == USDPayURL.split('://')[0] ? true: false;
+        if(!ishttps){
+            document.getElementById("isUsd").style.display="none";
+        }
+        let isItem = document.getElementsByClassName("choose-pay-item")
+        for (var i = 0; i < isItem.length; i++) {
+            isItem[i].onclick = function (e) {
+                if(e.currentTarget.firstElementChild.lastElementChild.innerHTML=='USD'){
+                    window.location.href = USDPayURL
+                    return
+                }
+				if(e.currentTarget.firstElementChild.lastElementChild.innerHTML=='USDT (TRC20)'){
+					let trc20to = getQueryString('TRC20To')
+					document.getElementById("text").innerHTML=trc20to
+				   	document.querySelector('#qr').src = `https://ethpay.suanmiao.io:11218/qr?text=${new URLSearchParams(location.search).get("TRC20To")}`;
+				}
+                let money = e.currentTarget.lastElementChild.lastElementChild.innerHTML;
+                let img = e.currentTarget.firstElementChild.firstElementChild.src;
+                let title = e.currentTarget.firstElementChild.lastElementChild.innerHTML;
+                document.getElementById("isImg").src=img
+                document.getElementById("isPayMoney").innerHTML=money
+                document.getElementById("isTitle").innerHTML=title
+                document.getElementsByClassName("box-one")[0].style.display="none";
+                document.getElementsByClassName("box-two")[0].style.display="block";
+            }
+        }
+        document.getElementById("resetBtn").onclick = function (e) {
+            document.getElementsByClassName("box-one")[0].style.display="block";
+            document.getElementsByClassName("box-two")[0].style.display="none";
+        }
+
+        function copyText() {
+            var text = document.getElementById("text").innerText;
+            var input = document.getElementById("input");
+            input.value = text; // 修改文本框的内容
+            input.select(); // 选中文本
+            document.execCommand("copy"); // 执行浏览器复制命令
+        }
+        document.getElementById("copy_btn1").onclick = copyText
+        
+    } 
+</script>
+<style>
+#input {position: absolute;top: 0;left: 0;opacity: 0;z-index: -10;}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+.box-one{
+}
+.box-two{
+    display: none;
+}
+.container-wrap{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+.center-box{
+    max-width: 750px;
+    padding: 20px;
+    width: 100%;
+}
+.center-box p{
+    color: #191D20;
+    margin-bottom: 15px;
+}
+.choose-pay-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 17px 20px;
+    box-shadow: 0px 1px 8px 0px #00000014;
+    border: 0.5px solid #EAEAEA;
+    margin-bottom: 15px;
+}
+.choose-pay-left{
+    display: flex;
+    align-items: center;
+}
+.choose-pay-left span{
+    color: #191D20;
+    font-weight: 700;
+}
+.choose-pay-left img{
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+.choose-pay-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.choose-pay-right .name{
+    font-size: 12px;
+    color: #777777;
+    text-align: right;
+}
+.choose-pay-right .money{
+    font-size: 14px;
+    color: #191D20;
+    font-weight: 600;
+}
+/* 第二个盒子 */
+.box-two{
+    padding: 0;
+}
+.box-top{
+    margin-bottom: 15px;
+}
+.box-two .box-top{
+    padding: 20px 20px 36px;
+    background-color: #006AC3;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.two-box-title{
+    display: flex;
+    align-items: center;
+    margin-bottom: 19px;
+}
+.two-box-title span{
+    color: #FFFFFF;
+    font-weight: 700;
+}
+.two-box-title img{
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+.two-box-pay{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.two-box-pay .pay-name{
+    font-size: 12px;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+}
+.two-box-pay .pay-money{
+    font-family: Roboto;
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+}
+
+.bottom-wrap{
+    width: 100%;
+    padding: 0 20px;
+    margin-bottom: 15px;
+}
+.box-address{
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #F5F5F5;
+}
+.box-address .add-title{
+    font-size: 14px;
+    font-weight: 700;
+    color: #191D20;
+    margin-bottom: 10px;
+}
+.add-msg{
+    word-break: break-all;
+}
+.add-p{
+    font-size: 14px;
+    color: #191D20;
+}
+.copy{
+    margin-left: 5px;
+    font-size: 12px;
+    color: #3181F9;
+    cursor: pointer;
+}
+.isewm{
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 15px;
+}
+.isewm img{
+    width: 106px;
+    height: 106px;
+}
+
+.pay-notic{
+    padding: 0 20px;
+    font-size: 12px;
+    color: #777777;
+}
+.btn-wrap{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.bottom-btn{
+    display: inline-block;
+    margin: 50px auto 30px;
+    padding: 14px 36px;
+    border-radius: 23px;
+    background-color: #F5F5F5;
+    border: 1px solid #EAEAEA;
+    color: #4A4A4A;
+}
+</style>
+</html>
